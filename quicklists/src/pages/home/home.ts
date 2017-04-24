@@ -84,11 +84,19 @@ export class HomePage {
   	}
 
   	viewChecklist(checklist): void {
-
+  		this.nav.push('Checklist', {
+  			checklist: checklist
+  		});	
   	}
 
   	removeChecklist(checklist): void {
+  		let index = this.checklists.indexOf(checklist);
 
+  		if (index > -1) {
+  			this.checklists.splice(index, 1);
+  		}
+
+  		this.save();
   	}
 
   	save(): void {
