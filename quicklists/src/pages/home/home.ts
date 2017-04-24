@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, Platform } from 'ionic-angular';
+import { ChecklistModel } from '../../models/checklist-model';
+import { Data } from '../../providers/data';
+import { Keyboard } from '@ionic-native/keyboard';
 
 @IonicPage()
 @Component({
@@ -8,9 +11,62 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 
 export class HomePage {
+	checklists: ChecklistModel[] = [];
 
-  constructor(public navCtrl: NavController) {
 
-  }
+  	constructor(public nav: NavController, public dataService: Data, public alertCtrl: AlertController, public platform: Platform, keyboard: Keyboard) {
+
+
+  	}
+
+  	ionViewDidLoad() {
+
+  	}
+
+  	addChecklist(): void {
+  		let prompt = this.alertCtrl.create({
+  			title: 'New Checklist',
+  			message: 'Enter the name of your new checklist below:',
+  			inputs: [
+  				{
+  					name: 'name'
+  				}
+  			],
+  			buttons: [
+  				{
+  					text: 'Cancel'
+  				},
+  				{
+  					text: 'Save',
+  					handler: data => {
+  						let newChecklist = new ChecklistModel(data.name, []);
+  						this.checklists.push(newChecklist);
+
+  						newChecklist.checklistUpdates().subscribe(update => {
+  							this.save();
+  						});
+  					}
+  				}
+  			]
+  		});
+
+  		prompt.present();
+  	}
+
+  	renameChecklist(checklist): void {
+
+  	}
+
+  	viewChecklist(checklist): void {
+
+  	}
+
+  	removeChecklist(checklist): void {
+
+  	}
+
+  	save(): void {
+
+  	}
 
 }
