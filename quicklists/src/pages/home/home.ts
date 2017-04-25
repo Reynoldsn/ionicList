@@ -45,6 +45,7 @@ export class HomePage {
   						newChecklist.checklistUpdates().subscribe(update => {
   							this.save();
   						});
+              this.save();
   					}
   				}
   			]

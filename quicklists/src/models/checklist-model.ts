@@ -17,7 +17,7 @@ export class ChecklistModel{
 
 
 
-	// void is used whe there is no data to return
+	// void is used when there is no data to return
 
 	addItem(item): void {
 		this.items.push({
