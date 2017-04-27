@@ -29,4 +29,5 @@ import { Keyboard } from '@ionic-native/keyboard';
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
+
 export class AppModule {}
