@@ -4,7 +4,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 @IonicPage()
 @Component({
 	selector: 'page-checklist',
-  	templateUrl: 'checklist.html',
+	templateUrl: 'checklist.html',
 })
 
 export class Checklist {
@@ -21,20 +21,20 @@ export class Checklist {
 			title: 'Add Item',
 			message: 'Enter the name of the task for this checklist below:',
 			inputs: [
-				{
-					name: 'name'
-				}
+			{
+				name: 'name'
+			}
 			],
 			buttons: [
-				{
-					text: 'Cancel'
-				},
-				{
-					text: 'Save',
-					handler: data => {
-						this.checklist.addItem(data.name);
-					}
+			{
+				text: 'Cancel'
+			},
+			{
+				text: 'Save',
+				handler: data => {
+					this.checklist.addItem(data.name);
 				}
+			}
 			]
 		});
 
@@ -54,20 +54,20 @@ export class Checklist {
 			title: 'Rename Item',
 			message: 'Enter the new name of the task for this checklist below:',
 			inputs: [
-				{
-					name: 'name'
-				}
+			{
+				name: 'name'
+			}
 			],
 			buttons: [
-				{
-					text: 'Cancel'
-				},
-				{
-					text: 'Save',
-					handler: data => {
-						this.checklist.renameItem(item, data.name);
-					}
+			{
+				text: 'Cancel'
+			},
+			{
+				text: 'Save',
+				handler: data => {
+					this.checklist.renameItem(item, data.name);
 				}
+			}
 			]
 		});
 
