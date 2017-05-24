@@ -3,6 +3,7 @@ import { IonicPage, NavController, AlertController, Platform } from 'ionic-angul
 import { ChecklistModel } from '../../models/checklist-model';
 import { Data } from '../../providers/data';
 import { Keyboard } from '@ionic-native/keyboard';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -11,98 +12,122 @@ import { Keyboard } from '@ionic-native/keyboard';
 })
 
 export class HomePage {
-	checklists: ChecklistModel[] = [];
+  checklists: ChecklistModel[] = [];
 
 
-  	constructor(public nav: NavController, public dataService: Data, public alertCtrl: AlertController, public platform: Platform, public keyboard: Keyboard) {
+  constructor(public nav: NavController, public dataService: Data, public alertCtrl: AlertController, public platform: Platform, public keyboard: Keyboard, public storage: Storage) {
 
 
-  	}
+  }
 
-  	ionViewDidLoad() {
+  ionViewDidLoad() {
+    this.platform.ready().then(() => {
+      this.storage.get('introShown').then((result)=> {
+        if(!result) {
+          this.storage.set('introShown', true);
+          this.nav.setRoot('Intro');
+        }
+      });
 
-  	}
+      this.dataService.getData().then((checklists) => {
+        let savedChecklists: any = false;
 
-  	addChecklist(): void {
-  		let prompt = this.alertCtrl.create({
-  			title: 'New Checklist',
-  			message: 'Enter the name of your new checklist below:',
-  			inputs: [
-  				{
-  					name: 'name'
-  				}
-  			],
-  			buttons: [
-  				{
-  					text: 'Cancel'
-  				},
-  				{
-  					text: 'Save',
-  					handler: data => {
-  						let newChecklist = new ChecklistModel(data.name, []);
-  						this.checklists.push(newChecklist);
-
-  						newChecklist.checklistUpdates().subscribe(update => {
-  							this.save();
-  						});
+        if (typeof(checklists) != "undefined") {
+          savedChecklists = JSON.parse(checklists);
+        }
+        if (savedChecklists) {
+          savedChecklists.forEach((savedChecklist) => {
+            let loadChecklist = new ChecklistModel(savedChecklist.title, savedChecklist.item);
+            this.checklists.push(loadChecklist);
+            loadChecklist.checklistUpdates().subscribe(update => {
               this.save();
-  					}
-  				}
-  			]
-  		});
+            });
+          });
+        }
+      });
+    });
+  }
 
-  		prompt.present();
-  	}
+  addChecklist(): void {
+    let prompt = this.alertCtrl.create({
+      title: 'New Checklist',
+      message: 'Enter the name of your new checklist below:',
+      inputs: [
+      {
+        name: 'name'
+      }
+      ],
+      buttons: [
+      {
+        text: 'Cancel'
+      },
+      {
+        text: 'Save',
+        handler: data => {
+          let newChecklist = new ChecklistModel(data.name, []);
+          this.checklists.push(newChecklist);
 
-  	renameChecklist(checklist): void {
-  		let prompt = this.alertCtrl.create({
-  			title: 'Rename Checklist',
-  			message: 'Enter the new name of this checklist below',
-  			inputs: [
-  				{
-  					name: 'name'
-  				}
-  			],
-  			buttons: [
-  				{
-  					text: 'Cancel'
-  				},
-  				{
-  					text: 'Save',
-  					handler: data => {
-  						let index = this.checklists.indexOf(checklist);
+          newChecklist.checklistUpdates().subscribe(update => {
+            this.save();
+          });
+          this.save();
+        }
+      }
+      ]
+    });
 
-  						if (index > -1) {
-  							this.checklists[index].setTitle(data.name);
-  							this.save();
-  						}
-  					}
-  				}
-  			]
-  		});
+    prompt.present();
+  }
 
-  		prompt.present();
-  	}
+  renameChecklist(checklist): void {
+    let prompt = this.alertCtrl.create({
+      title: 'Rename Checklist',
+      message: 'Enter the new name of this checklist below',
+      inputs: [
+      {
+        name: 'name'
+      }
+      ],
+      buttons: [
+      {
+        text: 'Cancel'
+      },
+      {
+        text: 'Save',
+        handler: data => {
+          let index = this.checklists.indexOf(checklist);
 
-  	viewChecklist(checklist): void {
-  		this.nav.push('Checklist', {
-  			checklist: checklist
-  		});	
-  	}
+          if (index > -1) {
+            this.checklists[index].setTitle(data.name);
+            this.save();
+          }
+        }
+      }
+      ]
+    });
 
-  	removeChecklist(checklist): void {
-  		let index = this.checklists.indexOf(checklist);
+    prompt.present();
+  }
 
-  		if (index > -1) {
-  			this.checklists.splice(index, 1);
-  		}
+  viewChecklist(checklist): void {
+    this.nav.push('Checklist', {
+      checklist: checklist
+    });    
+  }
 
-  		this.save();
-  	}
+  removeChecklist(checklist): void {
+    let index = this.checklists.indexOf(checklist);
 
-  	save(): void {
-      this.keyboard.close();
-      this.dataService.save(this.checklists);
-  	}
+    if (index > -1) {
+      this.checklists.splice(index, 1);
+    }
+
+    this.save();
+  }
+
+  save(): void {
+    this.keyboard.close();
+    this.dataService.save(this.checklists);
+  }
 
 }

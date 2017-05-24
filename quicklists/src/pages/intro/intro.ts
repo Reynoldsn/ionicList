@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -8,11 +8,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class Intro {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad Intro');
+  goToHome(): void {
+    this.navCtrl.setRoot('HomePage');
   }
 
 }
