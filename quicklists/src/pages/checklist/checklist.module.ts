@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from 'ionic-angular';
+import { IonicPageModule } from 'ionic-angular';
 import { Checklist } from './checklist';
 
 @NgModule({
   declarations: [
     Checklist,
   ],
-  // imports: [
-  //   IonicModule.forChild(Checklist),
-  // ],
+  imports: [
+    IonicPageModule.forChild(Checklist),
+  ],
   exports: [
     Checklist
   ]
